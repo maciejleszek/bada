@@ -2,14 +2,15 @@ from sqlalchemy.orm import sessionmaker
 from models import db, User, Event, Result, Discipline
 from datetime import datetime
 from app import app  # Import aplikacji Flask
+from werkzeug.security import generate_password_hash
 
 # Wypełnianie bazy danymi testowymi
 def populate_database():
     # Użytkownicy
     users = [
-        User(name="John", surname="Doe", email="john.doe@example.com", password_hash="hashed_password", role="admin"),
-        User(name="Alice", surname="Smith", email="alice.smith@example.com", password_hash="hashed_password", role="athlete"),
-        User(name="Bob", surname="Johnson", email="bob.johnson@example.com", password_hash="hashed_password", role="coach"),
+        User(name="John", surname="Doe", email="john.doe@example.com", password_hash=generate_password_hash("hashed_password"), role="admin"), # hashed_password
+        User(name="Alice", surname="Smith", email="alice.smith@example.com", password_hash=generate_password_hash("hashed_password"), role="athlete"), # hashed_password
+        User(name="Bob", surname="Johnson", email="bob.johnson@example.com", password_hash=generate_password_hash("hashed_password"), role="coach"), # hashed_password
     ]
     db.session.add_all(users)
 

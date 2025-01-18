@@ -10,13 +10,13 @@ def token_required(f):
         token = request.headers.get('Authorization')
 
         if not token:
-            return jsonify({'message': 'Token is missing'}), 403
+            return "Error: Nagłówek \"Authorization\" jest wymagany", 401
         try:
             jwt_decoded = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
         except:
-            return jsonify({'message': 'Token is invalid'}), 403
+            return "Error: niewłaściwy token", 401
         
-        # Make decoded token available to wrapped function
+        # Udostępnij dane w tokenie funkcji wewnętrznej
         kwargs.update({"jwt_token_decoded": jwt_decoded})
 
         return f(*args, **kwargs)

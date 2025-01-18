@@ -2,6 +2,7 @@ import jwt
 from flask import Blueprint, jsonify, request
 from models import User, db
 from werkzeug.security import check_password_hash
+from auth import token_required
 
 users_bp = Blueprint('users', __name__)
 
@@ -9,16 +10,38 @@ SECRET_KEY = 'your-secret-key'
 
 @users_bp.route('/login', methods=['POST'])
 def login():
-    data = request.json
+    data = request.get_json()
+
+    if data == None:
+        return "Error: Nie otrzymano danych", 400
+
+    if "email" not in data:
+        return "Error: Pole \"email\" jest wymagane", 400
+    
+    if "password" not in data:
+            return "Error: Pole \"password\" jest wymagane", 400
+
     user = User.query.filter_by(email=data['email']).first()
-    if user and check_password_hash(user.password_hash, data['password']):
+
+    if user == None:
+        return "Error: Użytkownik nie istnieje w bazie danych", 404
+
+    if check_password_hash(user.password_hash, data['password']):
         token = jwt.encode({'id': user.id, 'role': user.role}, SECRET_KEY, algorithm='HS256')
         return jsonify({'token': token, 'role': user.role}), 200
-    return jsonify({'message': 'Invalid email or password'}), 401
+    
+    return "Error: Adres e-mail lub hasło nie są poprawne", 400
 
 @users_bp.route('/', methods=['GET'])
-def get_users():
+@token_required # Tylko dla adminów
+def get_users(**kwargs):
+    token_decoded = kwargs["jwt_token_decoded"]
+
+    if token_decoded.role != "admin":
+         return "Error: Niewystarczające uprawnienia", 403
+
     users = User.query.all()
+    
     return jsonify([{"id": user.id, "name": user.name, "surname": user.surname, "email": user.email, "role": user.role} for user in users])
 
 @users_bp.route('/', methods=['POST'])

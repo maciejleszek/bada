@@ -114,7 +114,7 @@ def get_user(id, **kwargs):
     return user.to_dict(), 200
 
 # Update
-@users_bp.route('/<id>', methods=['POST'])
+@users_bp.route('/update/<id>', methods=['POST'])
 @token_required
 def update_user(id, **kwargs):
     token_decoded = kwargs["jwt_token_decoded"]
@@ -159,8 +159,8 @@ def update_user(id, **kwargs):
     
     return user.to_dict(), 200
 
-# Update
-@users_bp.route('/<id>', methods=['DELETE'])
+# Delete
+@users_bp.route('/delete/<id>', methods=['DELETE'])
 @token_required
 def delete_user(id, **kwargs):
     token_decoded = kwargs["jwt_token_decoded"]

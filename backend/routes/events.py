@@ -6,14 +6,49 @@ events_bp = Blueprint('events', __name__)
 
 @events_bp.route('/', methods=['GET'])
 @token_required
-def get_events():
-    events = Event.query.all()
-    return jsonify([{"id": event.id, "name": event.name, "date": event.date, "location": event.location} for event in events])
+def get_events(**kwargs):
+    try:
+        events = Event.query.all()
+        return jsonify([
+            {
+                "id": event.id,
+                "name": event.name,
+                "date": event.date,
+                "location": event.location
+            } for event in events]), 200
+    except:
+        return "Error: błąd wewnętrzny", 500
 
 @events_bp.route('/', methods=['POST'])
-def create_event():
+@token_required
+def create_event(**kwargs):
+    jwt_token = kwargs["jwt_token_decoded"]
+
     data = request.json
-    event = Event(name=data['name'], date=data['date'], location=data['location'])
-    db.session.add(event)
-    db.session.commit()
-    return jsonify({"message": "Event created successfully!"}), 201
+
+    if data == None:
+        return "Error: Nie otrzymano danych", 400
+
+    if "name" not in data:
+        return "Error: Pole \"name\" jest wymagane", 400
+    
+    if "date" not in data:
+        return "Error: Pole \"date\" jest wymagane", 400
+
+    if "location" not in data:
+        return "Error: Pole \"location\" jest wymagane", 400
+    
+    event = Event(
+        name=data["name"],
+        date=data["date"],
+        location=data["location"],
+    )
+    
+    try:
+        db.session.add(event)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        return "Error: nie udało się dodać wydarzenia", 500
+    
+    return "Pomyślnie dodano wydarzenie!", 201

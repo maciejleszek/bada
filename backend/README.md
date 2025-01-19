@@ -6,8 +6,8 @@
 - **/api/users/\<id>** (GET): get a user's info
 - **/api/users/login** (POST): log in
 - **/api/users/create** (POST): create a new user
-- **/api/users/update\<id>** (POST): update a user's data
-- **/api/users/delete\<id>** (DELETE): delete a user
+- **/api/users/update/\<id>** (POST): update a user's data
+- **/api/users/delete/\<id>** (DELETE): delete a user
 
 ## Event
 

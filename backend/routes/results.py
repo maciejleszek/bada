@@ -14,7 +14,7 @@ def get_all_results():
             "result": result.result
         } for result in results]), 200
 
-@results_bp.route('/<id>', methods=['GET'])
+@results_bp.route('/athlete/<id>', methods=['GET'])
 def get_athletes_results(id):
     athlete = User.query.filter_by(id=id).first()
 

@@ -42,6 +42,7 @@ def login():
 
 # Create
 @users_bp.route('/create', methods=['POST'])
+@token_required
 def create_user():
     data = request.json
 

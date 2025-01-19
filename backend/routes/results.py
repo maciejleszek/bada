@@ -1,10 +1,12 @@
 from flask import Blueprint, jsonify, request
 from models import User, Result, Event, Discipline, db
+from auth import token_required
 
 results_bp = Blueprint('results', __name__)
 
 # Create
 @results_bp.route('/', methods=['POST'])
+@token_required
 def create_result():
     data = request.json
 
@@ -59,11 +61,13 @@ def create_result():
 
 # Read
 @results_bp.route('/', methods=['GET'])
+@token_required
 def get_all_results():
     results = Result.query.all()
     return jsonify([result.to_dict() for result in results]), 200
 
 @results_bp.route('/athlete/<id>', methods=['GET'])
+@token_required
 def get_athletes_results(id):
     athlete = User.query.filter_by(id=id).first()
 
@@ -78,6 +82,7 @@ def get_athletes_results(id):
 
 # Update
 @results_bp.route('/update/<id>', methods=['POST'])
+@token_required
 def update_result(id):
     result = Result.query.filter_by(id=id).first()
     
@@ -114,6 +119,7 @@ def update_result(id):
 
 # Delete
 @results_bp.route('/delete/<id>', methods=['DELETE'])
+@token_required
 def delete_user(id, **kwargs):
     result = Result.query.filter_by(id=id).first()
     

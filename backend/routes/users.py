@@ -1,7 +1,7 @@
 import jwt
 from flask import Blueprint, jsonify, request
 from models import User, db
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from auth import token_required
 
 users_bp = Blueprint('users', __name__)
@@ -47,7 +47,43 @@ def get_users(**kwargs):
 @users_bp.route('/', methods=['POST'])
 def create_user():
     data = request.json
-    user = User(name=data['name'], surname=data['surname'], email=data['email'], password_hash=data['password_hash'], role=data['role'])
-    db.session.add(user)
-    db.session.commit()
-    return jsonify({"message": "User created successfully!"}), 201
+
+    if data == None:
+        return "Error: Nie otrzymano danych", 400
+
+    if "name" not in data:
+        return "Error: Pole \"name\" jest wymagane", 400
+    
+    if "surname" not in data:
+        return "Error: Pole \"surname\" jest wymagane", 400
+
+    if "email" not in data:
+        return "Error: Pole \"email\" jest wymagane", 400
+    
+    if "password" not in data:
+        return "Error: Pole \"password\" jest wymagane", 400
+    
+    if "role" not in data:
+        return "Error: Pole \"role\" jest wymagane", 400
+    
+    valid_roles = ["admin", "athlete", "coach"]
+
+    if "role" not in valid_roles:
+         return f"Error: Rola musi przyjmować jedną z następujących wartości: {"; ".join(valid_roles)}", 400
+
+    user = User(
+        name=data["name"],
+        surname=data["surname"],
+        email=data["email"],
+        password_hash=generate_password_hash(data["password_hash"]),
+        role=data["role"]
+    )
+
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        return "Error: Nie udało się dodać użytkownika", 500
+
+    return "Pomyślnie dodano użytkownika!", 201

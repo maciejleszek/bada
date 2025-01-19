@@ -23,6 +23,7 @@ class Result(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     athlete_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
+    discipline_id = db.Column(db.Integer, db.ForeignKey('disciplines.id'), nullable=False)
     result = db.Column(db.String, nullable=False)
 
 class Discipline(db.Model):

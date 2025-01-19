@@ -2,7 +2,10 @@
 
 # Backend (Flask)
 # backend/
+# |-- instance/
+#     |-- sports_club.db
 # |-- app.py               # Główna aplikacja Flask
+# |-- auth.py              # Autoryzacja z tokenami JWT
 # |-- config.py            # Konfiguracja bazy danych i aplikacji
 # |-- models.py            # Modele ORM (SQLAlchemy)
 # |-- routes/
@@ -17,12 +20,15 @@
 # frontend/
 # |index.html       # Główny plik HTML
 # |-- src/
-#     |-- App.js           # Główna aplikacja React
-#     |-- index.js         # Punkt wejściowy React
+#     |-- App.jsx          # Główna aplikacja React
+#     |-- main.jsx         # Punkt wejściowy React
 #     |-- components/
-#         |-- Login.js     # Komponent logowania
-#         |-- AthletePanel.js # Panel zawodnika
-#         |-- AdminPanel.js   # Panel administratora
+#         |-- Login.jsx     # Komponent logowania
+#         |-- AthletePanel.jsx # Panel zawodnika
+#         |-- AdminPanel.jsx   # Panel administratora
+#         |-- ErrorPage.jsx   # Panel administratora
+#         |-- FormValidator.jsx   # Panel administratora
+#         |-- Toast.jsx   # Panel administratora
 #     |-- api/
 #         |-- api.js       # Obsługa komunikacji z backendem
 #     |-- styles/

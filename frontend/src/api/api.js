@@ -58,3 +58,58 @@ export const fetchEvents = async () => {
   });
   return handleResponse(response);
 };
+
+export const fetchResults = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
+
+  const response = await fetch(`${API_BASE_URL}/results/`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    credentials: 'include'
+  });
+  return handleResponse(response);
+};
+
+// // Results
+// export const fetchAllResults = async () => {
+//   const token = localStorage.getItem('token');
+//   if (!token) {
+//     throw new Error('No authentication token found');
+//   }
+
+//   const response = await fetch(`${API_BASE_URL}/results/`, {
+//     method: 'GET',
+//     headers: {
+//       'Authorization': `Bearer ${token}`,
+//       'Content-Type': 'application/json'
+//     },
+//     credentials: 'include'
+//   });
+//   return handleResponse(response);
+// };
+
+// export const fetchUserResults = async (userId) => {
+//   const token = localStorage.getItem('token');
+//   if (!token) {
+//     throw new Error('No authentication token found');
+//   }
+
+//   const response = await fetch(`${API_BASE_URL}/results/athlete/${userId}`, {
+//     method: 'GET',
+//     headers: {
+//       'Authorization': `Bearer ${token}`,
+//       'Content-Type': 'application/json'
+//     },
+//     credentials: 'include'
+//   });
+//   return handleResponse(response);
+// };
+// // 
+

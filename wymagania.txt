@@ -1,0 +1,48 @@
+SPOSÓB OCENY: Aplikacja będzie oceniana na trzech płaszczyznach:
+1) Intuicyjność (odpowiednie rozmieszczenie komponentów na stronie, np. strona
+logowania w prawym górnym rogu, a nie na dole z lewej strony), przejrzystość
+(zastosowanie odpowiedniej i ciekawej kolorystyki, wykorzystanie CSS), pomysł (np.
+zastosowanie interaktywnych elementów na stronie, podpowiedzi w polach
+tekstowych, sprawdzaniu wprowadzanych danych oraz blokowaniu niepoprawnych,
+dymków informacyjnych np. o poprawnym zalogowaniu/wylogowaniu itd.) oraz jakość
+rozwiązania (poprawność/powtarzalność działania aplikacji, obsługa błędów poprzez
+wyświetlenie odpowiedniej strony dostosowanej stylistycznie do całej aplikacji np.
+próba usunięcia powiązanego rekordu, nieistniejąca strona, błąd wewnętrzny) (max 7
+pkt),
+2) obsługa perspektyw; aplikacja powinna zapewnić prezentacje danych w odniesieniu
+do co najmniej dwóch perspektyw użytkowników z niej korzystających (max 7 pkt),
+w szczególności:
+✓ perspektywy „wąskiej” - przykładowo użytkownik po zalogowaniu w ramach
+swojej perspektywy ma jedynie dostęp do danych dotyczących jego osoby.
+Należy jednak wybrać takie tabele, aby użytkownik mógł swoje dane
+częściowo modyfikować, edytować, usuwać, dodawać (w zależności od
+funkcjonalności stworzonej bazy danych). Samo wyświetlanie danych przez
+użytkownika nie będzie traktowane jako perspektywa (2,5 pkt).
+Przykład: użytkownik po zalogowaniu na swoje konto może edytować wybrane
+dane np. adres zamieszkania, numer konta bankowego itd. Może
+zarezerwować samochód z wypożyczalni, bilet do kina itd. (zgodnie z
+przedstawionymi i omówionymi przykładowymi projektami).
+✓ perspektywy „szerokiej” - przykładowo użytkownik na prawach administratora
+ma możliwość wprowadzania i usuwania danych oraz modyfikacji już
+istniejących (dodawanie, usuwanie, modyfikacja) (4,5 pkt).
+Przykład: użytkownik po zalogowaniu na konto z uprawnieniami administratora
+może usunąć konto danego użytkownika, może zatwierdzić rezerwację
+pojazdu/biletu dokonana przez zwykłego użytkownika, może dodawać nowe
+stanowiska w pracy np. kierownik zmiany i przypisywać je wybranym
+użytkownikom itd. (zgodnie z przedstawionymi i omówionymi przykładowymi
+projektami).
+Uwaga: Do obsługi perspektyw powinna zostać stworzona bezpieczna strona
+logowania (np. z wykorzystaniem Spring Security). Bezpieczna strona logowania
+oznacza min., że nie jest dopuszczalne, aby po zalogowaniu się na konto zwykłego
+użytkownika można przejść do panelu administratora np. poprzez wpisanie frazy
+„/admin” w adresie przeglądarki internetowej. Takie działanie powinno zostać
+zablokowane przez mechanizmy zabezpieczające, a dodatkowo powinien zostać
+wyświetlony odpowiedni komunikat np.: „Aby wyświetlić stronę, zaloguj się z
+odpowiednimi uprawnieniami.”
+3) wspieranie podstawowych operacji w ramach komunikacji z bazą danych, rozumianych
+jako możliwość wykonania czterech podstawowych operacji w kontekście komunikacji
+z bazą danych, tj.: - dodawanie danych (2 pkt), usuwanie danych (2 pkt), modyfikacja
+danych (2 pkt) oraz ich przeglądanie (1 pkt) (max 7 pkt). Dla perspektywy szerokiej
+powinny być możliwe wszystkie operacje (np. dla administratora), natomiast dla
+perspektywy wąskiej poza przeglądaniem danych dodatkowo co najmniej jedna z
+pozostałych operacji np. modyfikacja.

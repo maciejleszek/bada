@@ -11,9 +11,9 @@ const AthletePanel = () => {
 
   return (
     <div>
-      <h2>Welcome, Athlete!</h2>
+      <h2>Panel Atlety!</h2>
       
-      <button onClick={handleLogout} className="logout-button">Logout</button>
+      <button onClick={handleLogout} className="logout-button">Wyloguj</button>
 
     </div>
   );

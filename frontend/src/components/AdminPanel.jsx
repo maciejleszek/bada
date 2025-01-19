@@ -45,19 +45,19 @@ const AdminPanel = () => {
   return (
     <div className="admin-panel">
       <div className="header">
-        <h2>Admin Panel</h2>
-        <button onClick={handleLogout} className="logout-button">Logout</button>
+        <h2>Panel administratora</h2>
+        <button onClick={handleLogout} className="logout-button">Wyloguj</button>
       </div>
       
       <section className="users-section">
-        <h3>Users</h3>
+        <h3>Członkowie</h3>
         {users.length > 0 ? (
           <table className="data-table">
             <thead>
               <tr>
-                <th>Name</th>
+                <th>Imię i nazwisko</th>
                 <th>Email</th>
-                <th>Role</th>
+                <th>Rola</th>
               </tr>
             </thead>
             <tbody>
@@ -76,14 +76,14 @@ const AdminPanel = () => {
       </section>
 
       <section className="events-section">
-        <h3>Events</h3>
+        <h3>Wydarzenia</h3>
         {events.length > 0 ? (
           <table className="data-table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Location</th>
+                <th>Nazwa</th>
+                <th>Data</th>
+                <th>Lokalizacja</th>
               </tr>
             </thead>
             <tbody>

@@ -27,7 +27,7 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <h2>Athletic Club Login</h2>
+      <h2>Klub lekkoatletyczny - logowanie</h2>
       <form onSubmit={handleSubmit} className="login-form">
         <div className="form-group">
           <label htmlFor="email">Email</label>
@@ -41,7 +41,7 @@ const Login = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">Hasło</label>
           <input
             type="password"
             id="password"
@@ -53,7 +53,7 @@ const Login = () => {
         </div>
         {error && <div className="error-message">{error}</div>}
         <button type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? 'Logging in...' : 'Zaloguj'}
         </button>
       </form>
     </div>

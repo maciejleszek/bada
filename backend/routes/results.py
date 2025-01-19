@@ -7,7 +7,7 @@ results_bp = Blueprint('results', __name__)
 # Create
 @results_bp.route('/', methods=['POST'])
 @token_required
-def create_result():
+def create_result(**kwargs):
     data = request.json
 
     if data == None:
@@ -62,13 +62,13 @@ def create_result():
 # Read
 @results_bp.route('/', methods=['GET'])
 @token_required
-def get_all_results():
+def get_all_results(**kwargs):
     results = Result.query.all()
     return jsonify([result.to_dict() for result in results]), 200
 
 @results_bp.route('/athlete/<id>', methods=['GET'])
 @token_required
-def get_athletes_results(id):
+def get_athletes_results(id, **kwargs):
     athlete = User.query.filter_by(id=id).first()
 
     if not athlete:
@@ -83,7 +83,7 @@ def get_athletes_results(id):
 # Update
 @results_bp.route('/update/<id>', methods=['POST'])
 @token_required
-def update_result(id):
+def update_result(id, **kwargs):
     result = Result.query.filter_by(id=id).first()
     
     if not result:

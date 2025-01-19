@@ -17,7 +17,7 @@ class User(db.Model):
             "name": self.name,
             "surname": self.surname,
             "email": self.email,
-            "password_hash": self.password_hash,
+            # "password_hash": self.password_hash,
             "role": self.role,
         }
 

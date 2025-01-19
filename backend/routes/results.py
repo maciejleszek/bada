@@ -5,7 +5,7 @@ from auth import token_required
 results_bp = Blueprint('results', __name__)
 
 # Create
-@results_bp.route('/', methods=['POST'])
+@results_bp.route('/create', methods=['POST'])
 @token_required
 def create_result(**kwargs):
     data = request.json

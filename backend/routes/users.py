@@ -26,8 +26,16 @@ def login():
     if user == None:
         return "Error: Użytkownik nie istnieje w bazie danych", 404
 
-    if check_password_hash(user.password_hash, data['password']):
-        token = jwt.encode({'id': user.id, 'role': user.role}, SECRET_KEY, algorithm='HS256')
+    if check_password_hash(user.password_hash, data["password"]):
+        token = jwt.encode(
+            {
+                "id": user.id,
+                "role": user.role,
+                "email": user.email,
+            },
+            SECRET_KEY,
+            algorithm="HS256"
+        )
         return jsonify({'token': token, 'role': user.role}), 200
     
     return "Error: Adres e-mail lub hasło nie są poprawne", 400
@@ -42,7 +50,14 @@ def get_users(**kwargs):
 
     users = User.query.all()
     
-    return jsonify([{"id": user.id, "name": user.name, "surname": user.surname, "email": user.email, "role": user.role} for user in users])
+    return jsonify([
+        {
+            "id": user.id,
+            "name": user.name,
+            "surname": user.surname,
+            "email": user.email,
+            "role": user.role
+        } for user in users]), 200
 
 @users_bp.route('/', methods=['POST'])
 def create_user():

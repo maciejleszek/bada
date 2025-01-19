@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 from config import config
-# Importowanie modeli (zależne od db)
 from models import db, User, Event, Result, Discipline
 
 # Importowanie i rejestracja blueprintów
@@ -13,6 +13,17 @@ from routes.results import results_bp
 # Inicjalizacja aplikacji Flask
 app = Flask(__name__)
 app.config.from_object(config['development'])
+
+app.url_map.strict_slashes = False
+# Enable CORS
+CORS(app, resources={
+    r"/api/*": {
+        "origins": ["http://localhost:5173", "http://127.0.0.1:5173"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
+    }
+})
 
 # Inicjalizacja bazy danych
 db.init_app(app)

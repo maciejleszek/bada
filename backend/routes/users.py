@@ -83,7 +83,7 @@ def create_user():
         db.session.rollback()
         return "Error: Nie udało się dodać użytkownika", 500
 
-    return "Pomyślnie dodano użytkownika!", 201
+    return user.to_dict(), 201
 
 # Read
 @users_bp.route('/', methods=['GET'])

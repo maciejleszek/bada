@@ -55,7 +55,7 @@ def create_result():
         db.session.rollback()
         return "Error: Nie udało się dodać wyniku", 500
 
-    return "Pomyślnie dodano wynik!", 201
+    return result.to_dict(), 201
 
 # Read
 @results_bp.route('/', methods=['GET'])

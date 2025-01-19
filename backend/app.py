@@ -14,9 +14,7 @@ from routes.results import results_bp
 app = Flask(__name__)
 app.config.from_object(config['development'])
 
-# Disable strict slashes
 app.url_map.strict_slashes = False
-
 # Enable CORS
 CORS(app, resources={
     r"/api/*": {

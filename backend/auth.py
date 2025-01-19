@@ -7,25 +7,24 @@ SECRET_KEY = 'your-secret-key'
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = None
-        
-        # Check for token in Authorization header
-        auth_header = request.headers.get('Authorization')
-        if auth_header:
-            try:
-                token = auth_header.split(" ")[1]  # Remove 'Bearer ' prefix
-            except IndexError:
-                token = auth_header
-                
-        if not token:
-            return jsonify({'message': 'Token is missing'}), 401
-            
+        token = request.headers.get('Authorization')
+
         try:
-            jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            return jsonify({'message': 'Token has expired'}), 401
+            token = token.split(" ")[1]
+        except:
+            pass
+
+        if not token:
+            return "Error: Nagłówek \"Authorization\" jest wymagany", 401
+        try:
+            jwt_decoded = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
         except jwt.InvalidTokenError:
-            return jsonify({'message': 'Invalid token'}), 401
-            
+            return "Error: niewłaściwy token", 401
+        except jwt.ExpiredSignatureError:
+            return "Error: token wygasł", 401
+        
+        # Udostępnij dane w tokenie funkcji wewnętrznej
+        kwargs.update({"jwt_token_decoded": jwt_decoded})
+
         return f(*args, **kwargs)
     return decorated

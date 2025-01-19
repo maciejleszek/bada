@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from models import User, db
 from werkzeug.security import check_password_hash, generate_password_hash
 from auth import token_required
+import jwt
 
 users_bp = Blueprint('users', __name__)
 
@@ -91,7 +92,7 @@ def create_user():
 def get_all_users(**kwargs):
     token_decoded = kwargs["jwt_token_decoded"]
 
-    if token_decoded.role != "admin":
+    if token_decoded["role"] != "admin":
         return "Error: Niewystarczające uprawnienia", 403
 
     users = User.query.all()

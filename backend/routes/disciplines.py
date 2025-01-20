@@ -2,10 +2,10 @@ from flask import Blueprint, jsonify, request
 from models import Discipline, db
 from auth import token_required
 
-disciplines_bp = Blueprint('disciplines', __name__)
+disciplines_bp = Blueprint("disciplines", __name__)
 
 # Create
-@disciplines_bp.route('/create', methods=['POST'])
+@disciplines_bp.route("/create", methods=["POST"])
 @token_required
 def create_discipline(**kwargs):
     jwt_token = kwargs["jwt_token_decoded"]
@@ -32,17 +32,17 @@ def create_discipline(**kwargs):
     return discipline.to_dict(), 201
 
 # Read
-@disciplines_bp.route('/', methods=['GET'])
+@disciplines_bp.route("/", methods=["GET"])
 @token_required
 def get_disciplines(**kwargs):
     try:
         disciplines = Discipline.query.all()
-        return jsonify([discipline.to_dict() for discipline in disciplines]), 200
+        return [discipline.to_dict() for discipline in disciplines], 200
     except:
         return "Error: błąd serwera", 500
 
 # Update
-@disciplines_bp.route('/update/<id>', methods=['POST'])
+@disciplines_bp.route("/update/<id>", methods=["POST"])
 @token_required
 def update_discipline(id, **kwargs):
     discipline = Discipline.query.filter_by(id=id).first()
@@ -70,7 +70,7 @@ def update_discipline(id, **kwargs):
     return discipline.to_dict(), 200
 
 # Delete
-@disciplines_bp.route('/delete/<id>', methods=['DELETE'])
+@disciplines_bp.route("/delete/<id>", methods=["DELETE"])
 @token_required
 def delete_discipline(id, **kwargs):
     discipline = Discipline.query.filter_by(id=id).first()

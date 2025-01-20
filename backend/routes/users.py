@@ -4,11 +4,11 @@ from models import User, db
 from werkzeug.security import check_password_hash, generate_password_hash
 from auth import token_required
 
-users_bp = Blueprint('users', __name__)
+users_bp = Blueprint("users", __name__)
 
-SECRET_KEY = 'your-secret-key'
+SECRET_KEY = "your-secret-key"
 
-@users_bp.route('/login', methods=['POST'])
+@users_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
 
@@ -19,9 +19,9 @@ def login():
         return "Error: Pole \"email\" jest wymagane", 400
     
     if "password" not in data:
-            return "Error: Pole \"password\" jest wymagane", 400
+        return "Error: Pole \"password\" jest wymagane", 400
 
-    user = User.query.filter_by(email=data['email']).first()
+    user = User.query.filter_by(email=data["email"]).first()
 
     if user == None:
         return "Error: Użytkownik nie istnieje w bazie danych", 404
@@ -36,12 +36,12 @@ def login():
             SECRET_KEY,
             algorithm="HS256"
         )
-        return jsonify({'token': token, 'role': user.role}), 200
+        return {"token": token, "role": user.role}, 200
     
     return "Error: Adres e-mail lub hasło nie są poprawne", 400
 
 # Create
-@users_bp.route('/create', methods=['POST'])
+@users_bp.route("/create", methods=["POST"])
 @token_required
 def create_user(**kwargs):
     data = request.json
@@ -87,7 +87,7 @@ def create_user(**kwargs):
     return user.to_dict(), 201
 
 # Read
-@users_bp.route('/', methods=['GET'])
+@users_bp.route("/", methods=["GET"])
 @token_required # Tylko dla adminów
 def get_all_users(**kwargs):
     token_decoded = kwargs["jwt_token_decoded"]
@@ -97,9 +97,9 @@ def get_all_users(**kwargs):
 
     users = User.query.all()
     
-    return jsonify([user.to_dict() for user in users]), 200
+    return [user.to_dict() for user in users], 200
 
-@users_bp.route('/<id>', methods=['GET'])
+@users_bp.route("/<id>", methods=["GET"])
 @token_required
 def get_user(id, **kwargs):
     token_decoded = kwargs["jwt_token_decoded"]
@@ -115,7 +115,7 @@ def get_user(id, **kwargs):
     return user.to_dict(), 200
 
 # Update
-@users_bp.route('/update/<id>', methods=['POST'])
+@users_bp.route("/update/<id>", methods=["POST"])
 @token_required
 def update_user(id, **kwargs):
     token_decoded = kwargs["jwt_token_decoded"]
@@ -147,6 +147,7 @@ def update_user(id, **kwargs):
 
     if "role" in data:
         valid_roles = ["admin", "athlete", "coach"]
+
         if "role" not in valid_roles:
             return f"Error: Rola musi przyjmować jedną z następujących wartości: {"; ".join(valid_roles)}", 400
         
@@ -161,7 +162,7 @@ def update_user(id, **kwargs):
     return user.to_dict(), 200
 
 # Delete
-@users_bp.route('/delete/<id>', methods=['DELETE'])
+@users_bp.route("/delete/<id>", methods=["DELETE"])
 @token_required
 def delete_user(id, **kwargs):
     token_decoded = kwargs["jwt_token_decoded"]

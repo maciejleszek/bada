@@ -2,10 +2,10 @@ from auth import token_required
 from flask import Blueprint, jsonify, request
 from models import Event, db
 
-events_bp = Blueprint('events', __name__)
+events_bp = Blueprint("events", __name__)
 
 # Create
-@events_bp.route('/create', methods=['POST'])
+@events_bp.route("/create", methods=["POST"])
 @token_required
 def create_event(**kwargs):
     jwt_token = kwargs["jwt_token_decoded"]
@@ -40,17 +40,17 @@ def create_event(**kwargs):
     return event.to_dict(), 201
 
 # Read
-@events_bp.route('/', methods=['GET'])
+@events_bp.route("/", methods=["GET"])
 @token_required
 def get_events(**kwargs):
     try:
         events = Event.query.all()
-        return jsonify([event.to_dict() for event in events]), 200
+        return [event.to_dict() for event in events], 200
     except:
         return "Error: błąd serwera", 500
 
 # Update
-@events_bp.route('/update/<id>', methods=['POST'])
+@events_bp.route("/update/<id>", methods=["POST"])
 @token_required
 def update_event(id, **kwargs):
     event = Event.query.filter_by(id=id).first()
@@ -84,7 +84,7 @@ def update_event(id, **kwargs):
     return event.to_dict(), 200
 
 # Delete
-@events_bp.route('/delete/<id>', methods=['DELETE'])
+@events_bp.route("/delete/<id>", methods=["DELETE"])
 @token_required
 def delete_event(id, **kwargs):
     event = Event.query.filter_by(id=id).first()

@@ -2,10 +2,10 @@ from flask import Blueprint, jsonify, request
 from models import User, Result, Event, Discipline, db
 from auth import token_required
 
-results_bp = Blueprint('results', __name__)
+results_bp = Blueprint("results", __name__)
 
 # Create
-@results_bp.route('/create', methods=['POST'])
+@results_bp.route("/create", methods=["POST"])
 @token_required
 def create_result(**kwargs):
     data = request.json
@@ -60,13 +60,13 @@ def create_result(**kwargs):
     return result.to_dict(), 201
 
 # Read
-@results_bp.route('/', methods=['GET'])
+@results_bp.route("/", methods=["GET"])
 @token_required
 def get_all_results(**kwargs):
     results = Result.query.all()
-    return jsonify([result.to_dict() for result in results]), 200
+    return [result.to_dict() for result in results], 200
 
-@results_bp.route('/athlete/<id>', methods=['GET'])
+@results_bp.route("/athlete/<id>", methods=["GET"])
 @token_required
 def get_athletes_results(id, **kwargs):
     athlete = User.query.filter_by(id=id).first()
@@ -78,10 +78,10 @@ def get_athletes_results(id, **kwargs):
         return "Error: użytkownik o podanym id nie jest zawodnikiem", 400
 
     results = Result.query.filter_by(athlete_id=id)
-    return jsonify([result.to_dict() for result in results]), 200
+    return [result.to_dict() for result in results], 200
 
 # Update
-@results_bp.route('/update/<id>', methods=['POST'])
+@results_bp.route("/update/<id>", methods=["POST"])
 @token_required
 def update_result(id, **kwargs):
     result = Result.query.filter_by(id=id).first()
@@ -118,7 +118,7 @@ def update_result(id, **kwargs):
     return result.to_dict(), 200
 
 # Delete
-@results_bp.route('/delete/<id>', methods=['DELETE'])
+@results_bp.route("/delete/<id>", methods=["DELETE"])
 @token_required
 def delete_user(id, **kwargs):
     result = Result.query.filter_by(id=id).first()

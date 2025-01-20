@@ -24,7 +24,7 @@
 - **/api/results/update/\<id>** (POST): update a result's data
 - **/api/results/delete/\<id>** (DELETE): delete a result
 
-## Event
+## Discipline
 
 - **/api/disciplines/** (GET): get all disciplines
 - **/api/disciplines/create** (POST): create a new discipline

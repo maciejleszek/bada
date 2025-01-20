@@ -21,7 +21,7 @@ def create_result(**kwargs):
     if not athlete:
         return "Error: użytkownik o podanym id nie istnieje", 404
     
-    if athlete.role != "zawodnik":
+    if athlete.role != "athlete":
         return "Error: użytkownik o podanym id nie jest zawodnikiem", 400
     
     if "event_id" not in data:
@@ -74,7 +74,7 @@ def get_athletes_results(id, **kwargs):
     if not athlete:
         return "Error: użytkownik o podanym id nie istnieje", 404
     
-    if athlete.role != "zawodnik":
+    if athlete.role != "athlete":
         return "Error: użytkownik o podanym id nie jest zawodnikiem", 400
 
     results = Result.query.filter_by(athlete_id=id)

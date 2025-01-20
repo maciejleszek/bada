@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchUsers, fetchEvents } from '../api/api';
+import { fetchUsers, fetchEvents, fetchResults } from '../api/api';
 import DataTable from './DataTable';
 import ProfileForm from './ProfileForm';
 import ResultForm from './ResultForm';
@@ -37,6 +37,7 @@ const AdminPanel = () => {
       const [usersData, eventsData, resultsData] = await Promise.all([
         fetchUsers(),
         fetchEvents(),
+        fetchResults(),
       ]);
       setUsers(usersData);
       setEvents(eventsData);
@@ -82,7 +83,8 @@ const AdminPanel = () => {
     { key: 'name', label: 'Imię' },
     { key: 'surname', label: 'Nazwisko' },
     { key: 'email', label: 'Email' },
-    { key: 'role', label: 'Rola' }
+    { key: 'role', label: 'Rola' },
+    { key: 'id', label: 'ID'}
   ];
 
   const eventColumns = [
@@ -190,7 +192,7 @@ const AdminPanel = () => {
       )}
 
       {/* Panel wyników */}
-      {/* {currentTab === 2 && (
+      {currentTab === 2 && (
         <Box>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}>
             <Button
@@ -229,7 +231,7 @@ const AdminPanel = () => {
             )}
           />
         </Box>
-      )} */}
+      )}
     </Box>
 
       {showProfileForm && (

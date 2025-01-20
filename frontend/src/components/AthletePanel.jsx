@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchEvents } from '../api/api';
+import { fetchEvents, fetchUserResults } from '../api/api';
 import DataTable from './DataTable';
 import ProfileForm from './ProfileForm';
 import ResultForm from './ResultForm';
@@ -27,7 +27,7 @@ const AthletePanel = () => {
   const loadData = async () => {
     try {
       const [resultsData, eventsData] = await Promise.all([
-        // fetchUserResults(userId), // Uncomment this when implemented
+        fetchUserResults(userId), // Uncomment this when implemented
         fetchEvents(),
       ]);
       console.log('Events Data:', eventsData); // Debug

@@ -45,11 +45,14 @@ def login():
 @token_required
 def create_user(**kwargs):
     data = request.json
+    print(f" Data {data}")
 
     if data == None:
+        print("Error: Nie otrzymano danych")
         return "Error: Nie otrzymano danych", 400
 
     if "name" not in data:
+        print("Error: Pole \"name\" jest wymagane")
         return "Error: Pole \"name\" jest wymagane", 400
     
     if "surname" not in data:
@@ -66,14 +69,16 @@ def create_user(**kwargs):
     
     valid_roles = ["admin", "athlete", "coach"]
 
-    if "role" not in valid_roles:
+    if data["role"] not in valid_roles:
          return f"Error: Rola musi przyjmować jedną z następujących wartości: {"; ".join(valid_roles)}", 400
 
+    print("bec")
+    
     user = User(
         name=data["name"],
         surname=data["surname"],
         email=data["email"],
-        password_hash=generate_password_hash(data["password_hash"]),
+        password_hash=generate_password_hash(data["password"]),
         role=data["role"]
     )
 
@@ -181,7 +186,7 @@ def update_user(id, **kwargs):
 def delete_user(id, **kwargs):
     token_decoded = kwargs["jwt_token_decoded"]
 
-    if token_decoded.role != "admin":
+    if token_decoded["role"] != "admin":
         return "Error: Niewystarczające uprawnienia", 403
 
     user = User.query.filter_by(id=id).first()
@@ -196,4 +201,4 @@ def delete_user(id, **kwargs):
         db.session.rollback()
         return "Error: Nie udało się usunąć użytkownika", 500
     
-    return "Pomyślnie usunięto użytkownika", 200
+    return jsonify({"message": "Pomyślnie usunięto użytkownika"}), 200

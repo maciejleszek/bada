@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, Typography } from '@mui/material';
 import { AlertCircle, Save } from 'lucide-react';
 import { Alert, AlertTitle } from '@mui/material';
 
-const ResultForm = ({ result, events, disciplines, onSubmit, isAdmin }) => {
+const ResultForm = ({ result, events, disciplines, users, onSubmit, isAdmin }) => {
   const [formData, setFormData] = useState({
+    athlete_id: result?.athlete_id || '',
     event_id: result?.event_id || '',
     discipline_id: result?.discipline_id || '',
     result: result?.result || ''
@@ -40,6 +41,29 @@ const ResultForm = ({ result, events, disciplines, onSubmit, isAdmin }) => {
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>{error}</AlertTitle>
             </Alert>
+          )}
+          {isAdmin && ( 
+            <div className="space-y-2">
+              <label htmlFor="athlete_id" className="text-sm font-medium">
+                Zawodnik
+              </label>
+                <select 
+                    id="athlete_id"
+                    name="athlete_id"
+                    value={formData.athlete_id}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded-md"
+                    required
+                >
+                    <option value="">Wybierz zawodnika</option>
+                    {users?.map(user => (
+                        <option key={user.id} value={user.id}>
+                            {user.name} {user.surname}
+                        </option>
+                    ))}
+                </select>
+              
+            </div>
           )}
 
           <div className="space-y-2">

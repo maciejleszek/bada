@@ -128,6 +128,24 @@ export const updateUserProfile = async (userData, userId) => {
   return handleResponse(response);
 };
 
+export const createUserProfile = async (userData) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
+
+  const response = await fetch(`${API_BASE_URL}/users/create`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData)
+  });
+  return handleResponse(response);
+};
+
+
 export const createResult = async (resultData) => {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -161,3 +179,34 @@ export const fetchDisciplines = async () => {
   return handleResponse(response);
 };
 
+export const deleteUser = async (userId) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
+
+  const response = await fetch(`${API_BASE_URL}/users/delete/${userId}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  return handleResponse(response);
+};
+
+export const deleteResult = async (resultId) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
+
+  const response = await fetch(`${API_BASE_URL}/results/delete/${resultId}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  return handleResponse(response);
+};

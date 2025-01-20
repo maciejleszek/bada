@@ -5,10 +5,12 @@ import { Alert, AlertTitle } from '@mui/material';
 
 const ProfileForm = ({ user, onSubmit, isAdmin }) => {
   const [formData, setFormData] = useState({
+    id: user?.id || null,
     name: user?.name || '',
     surname: user?.surname || '',
     email: user?.email || '',
-    role: user?.role || 'athlete'
+    role: user?.role || 'athlete',
+    password: '' // Dodane pole hasła dla nowych użytkowników
   });
   const [error, setError] = useState('');
 
@@ -32,10 +34,11 @@ const ProfileForm = ({ user, onSubmit, isAdmin }) => {
   return (
     <Card className="w-full max-w-lg mx-auto">
       <CardHeader>
-        <Typography>Edytuj Profil</Typography>
+        <Typography>{user ? 'Edytuj Profil' : 'Dodaj Nowego Użytkownika'}</Typography>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
+
           {error && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
@@ -107,13 +110,30 @@ const ProfileForm = ({ user, onSubmit, isAdmin }) => {
               </select>
             </div>
           )}
+          
+          {!user && ( // Pokazuj pole hasła tylko dla nowych użytkowników
+            <div className="space-y-2">
+              <label htmlFor="password" className="text-sm font-medium">
+                Hasło
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full p-2 border rounded-md"
+                required
+              />
+            </div>
+          )}
 
           <button
             type="submit"
             className="w-full flex items-center justify-center gap-2 bg-primary text-white p-2 rounded-md hover:bg-primary/90"
           >
             <Save className="h-4 w-4" />
-            Zapisz zmiany
+            {user ? 'Zapisz zmiany' : 'Dodaj użytkownika'}
           </button>
         </form>
       </CardContent>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchUsers, fetchEvents, fetchResults } from '../api/api';
+import { fetchUsers, fetchEvents, fetchResults, fetchDisciplines, updateUserProfile, createUserProfile,
+  createResult, deleteUser, deleteResult } from '../api/api';
 import DataTable from './DataTable';
 import ProfileForm from './ProfileForm';
 import ResultForm from './ResultForm';
@@ -17,6 +18,7 @@ const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [events, setEvents] = useState([]);
   const [results, setResults] = useState([]);
+  const [disciplines, setDisciplines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showProfileForm, setShowProfileForm] = useState(false);
@@ -34,14 +36,16 @@ const AdminPanel = () => {
 
   const loadData = async () => {
     try {
-      const [usersData, eventsData, resultsData] = await Promise.all([
+      const [usersData, eventsData, resultsData, disciplinesData] = await Promise.all([
         fetchUsers(),
         fetchEvents(),
         fetchResults(),
+        fetchDisciplines(),
       ]);
       setUsers(usersData);
       setEvents(eventsData);
       setResults(resultsData);
+      setDisciplines(disciplinesData);
       setLoading(false);
     } catch (err) {
       console.error('Error:', err);
@@ -54,15 +58,52 @@ const AdminPanel = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/');
+  const handleProfileUpdate = async (data) => {
+    try {
+      let userId;
+      if (!data.id) {
+        // Nowy użytkownik
+        await createUserProfile(data);
+        showToast('Profil został dodany', 'success');
+      } else {
+        // Istniejący użytkownik
+        userId = data.id;
+        await updateUserProfile(data, userId);
+        showToast('Profil został zaktualizowany', 'success');
+      }
+      
+      setShowProfileForm(false);
+      loadData();
+    } catch (err) {
+      throw new Error(err.message || 'Failed to update profile');
+    }
   };
 
-  const handleDelete = (type, item) => {
-    setSelectedItem(item);
-    setDeleteAction(type);
-    setShowConfirmDialog(true);
+  const handleResultCreate = async (data) => {
+    try {
+      await createResult(data);
+      showToast('Wynik został dodany', 'success');
+      setShowResultForm(false);
+      loadData();
+    } catch (err) {
+      throw new Error(err.message || 'Failed to add result');
+    }
+  };
+
+  const handleDelete = async (type, item) => {
+    try {
+      console.log('Deleting', type, item);
+      if (type === 'user') {
+        await deleteUser(item.id);
+        showToast('Użytkownik został usunięty', 'success');
+      } else if (type === 'result') {
+        await deleteResult(item.id);
+        showToast('Wynik został usunięty', 'success');
+      }
+      loadData();
+    } catch (err) {
+      showToast(err.message || 'Wystąpił błąd podczas usuwania', 'error');
+    }
   };
 
   const handleEdit = (type, item) => {
@@ -72,6 +113,11 @@ const AdminPanel = () => {
     } else if (type === 'result') {
       setShowResultForm(true);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/');
   };
 
   const showToast = (message, type = 'success') => {
@@ -114,7 +160,13 @@ const AdminPanel = () => {
         return event ? event.name : 'Unknown';
       }
     },
-    { key: 'result', label: 'Wynik' }
+    { key: 'result', label: 'Wynik' },
+    { key: 'discipline_id', label: 'Dyscyplina',
+      render: (row) => {
+        const discipline = disciplines?.find((d) => d.id === row.discipline_id);
+        return discipline ? discipline.name : 'Unknown';
+      },
+    },
   ];
 
   if (loading) return <div className="flex items-center justify-center h-screen">Loading...</div>;
@@ -234,29 +286,21 @@ const AdminPanel = () => {
       )}
     </Box>
 
-      {showProfileForm && (
+    {showProfileForm && (
         <ProfileForm
           user={selectedItem}
-          onSubmit={async (data) => {
-            // Handle user update/create
-            showToast('Zapisano zmiany pomyślnie');
-            setShowProfileForm(false);
-            loadData();
-          }}
+          onSubmit={handleProfileUpdate}
           isAdmin={true}
         />
       )}
 
       {showResultForm && (
         <ResultForm
+          users={users}
           result={selectedItem}
           events={events}
-          onSubmit={async (data) => {
-            // Handle result update/create
-            showToast('Zapisano wynik pomyślnie');
-            setShowResultForm(false);
-            loadData();
-          }}
+          disciplines={disciplines}
+          onSubmit={handleResultCreate}
           isAdmin={true}
         />
       )}
@@ -264,11 +308,9 @@ const AdminPanel = () => {
       <ConfirmDialog
         isOpen={showConfirmDialog}
         onClose={() => setShowConfirmDialog(false)}
-        onConfirm={async () => {
-          // Handle delete action
-          showToast('Usunięto pomyślnie');
+        onConfirm={() => {
+          handleDelete(deleteAction, selectedItem);
           setShowConfirmDialog(false);
-          loadData();
         }}
         title="Potwierdź usunięcie"
         description="Czy na pewno chcesz usunąć ten element? Tej operacji nie można cofnąć."

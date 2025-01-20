@@ -9,6 +9,7 @@ results_bp = Blueprint('results', __name__)
 @token_required
 def create_result(**kwargs):
     data = request.json
+    print(f" Data {data}")
 
     if data == None:
         return jsonify({"error": "Nie otrzymano danych"}), 400

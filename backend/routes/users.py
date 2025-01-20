@@ -99,6 +99,18 @@ def get_all_users(**kwargs):
     
     return jsonify([user.to_dict() for user in users]), 200
 
+@users_bp.route('/me', methods=['GET'])
+@token_required
+def get_current_user(**kwargs):
+    """Endpoint do pobierania danych zalogowanego użytkownika"""
+    token_decoded = kwargs["jwt_token_decoded"]
+    user = User.query.filter_by(id=token_decoded["id"]).first()
+    
+    if not user:
+        return jsonify({"error": "Użytkownik nie został znaleziony"}), 404
+    
+    return jsonify(user.to_dict()), 200
+
 @users_bp.route('/<id>', methods=['GET'])
 @token_required
 def get_user(id, **kwargs):
@@ -120,45 +132,48 @@ def get_user(id, **kwargs):
 def update_user(id, **kwargs):
     token_decoded = kwargs["jwt_token_decoded"]
 
-    if token_decoded.role != "admin" and token_decoded.id != id:
-        return "Error: Niewystarczające uprawnienia", 403
+    # Konwersja id na int, ponieważ z URL przychodzi jako string
+    user_id = int(id)
 
-    user = User.query.filter_by(id=id).first()
+    # Sprawdzamy czy użytkownik ma prawo modyfikować dane
+    if token_decoded["role"] != "admin" and token_decoded["id"] != user_id:
+        return jsonify({"error": "Niewystarczające uprawnienia"}), 403
+
+    user = User.query.filter_by(id=user_id).first()
     
     if not user:
-        return "Error: Użytkownik o podanym id nie istnieje", 404
+        return jsonify({"error": "Użytkownik o podanym id nie istnieje"}), 404
     
     data = request.json
 
-    if data == None:
-        return "Error: Nie otrzymano danych", 400
+    if data is None:
+        return jsonify({"error": "Nie otrzymano danych"}), 400
     
     if "name" not in data and "surname" not in data and "email" not in data and "role" not in data:
-        return "Error: Co najmniej jedno z następujących pól jest wymagane: name; surname; email; role", 400
-    
-    if "name" in data:
-        user.name = data["name"]
-    
-    if "surname" in data:
-        user.surname = data["surname"]
-    
-    if "email" in data:
-        user.email = data["email"]
-
-    if "role" in data:
-        valid_roles = ["admin", "athlete", "coach"]
-        if "role" not in valid_roles:
-            return f"Error: Rola musi przyjmować jedną z następujących wartości: {"; ".join(valid_roles)}", 400
-        
-        user.role = data["role"]
+        return jsonify({"error": "Co najmniej jedno z następujących pól jest wymagane: name; surname; email; role"}), 400
     
     try:
+        if "name" in data:
+            user.name = data["name"]
+        
+        if "surname" in data:
+            user.surname = data["surname"]
+        
+        if "email" in data:
+            user.email = data["email"]
+
+        # Tylko admin może zmieniać rolę
+        if "role" in data and token_decoded["role"] == "admin":
+            valid_roles = ["admin", "athlete", "coach"]
+            if data["role"] not in valid_roles:
+                return jsonify({"error": f"Rola musi przyjmować jedną z następujących wartości: {'; '.join(valid_roles)}"}), 400
+            user.role = data["role"]
+        
         db.session.commit()
-    except:
+        return jsonify(user.to_dict()), 200
+    except Exception as e:
         db.session.rollback()
-        return "Error: Nie udało się zmienić danych użytkownika", 500
-    
-    return user.to_dict(), 200
+        return jsonify({"error": f"Nie udało się zmienić danych użytkownika: {str(e)}"}), 500
 
 # Delete
 @users_bp.route('/delete/<id>', methods=['DELETE'])

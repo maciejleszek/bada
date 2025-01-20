@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchEvents, fetchUserResults } from '../api/api';
+import { 
+  fetchEvents, 
+  fetchUserResults, 
+  fetchCurrentUser, 
+  fetchDisciplines,
+  updateUserProfile,
+  createResult
+} from '../api/api';
 import DataTable from './DataTable';
 import ProfileForm from './ProfileForm';
 import ResultForm from './ResultForm';
-import { Card, CardContent, CardHeader, Typography } from '@mui/material';
+import { Tabs, Tab, Box } from '@mui/material';
 import { Button } from '@mui/material';
 import { PlusCircle, User, LogOut } from 'lucide-react';
 import { Toast } from './Toast';
@@ -12,6 +19,8 @@ import { Toast } from './Toast';
 const AthletePanel = () => {
   const [results, setResults] = useState([]);
   const [events, setEvents] = useState([]);
+  const [disciplines, setDisciplines] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showProfileForm, setShowProfileForm] = useState(false);
@@ -26,18 +35,48 @@ const AthletePanel = () => {
 
   const loadData = async () => {
     try {
-      const [resultsData, eventsData] = await Promise.all([
-        fetchUserResults(userId), // Uncomment this when implemented
+      const [resultsData, eventsData, disciplinesData, userData] = await Promise.all([
+        fetchUserResults(userId),
         fetchEvents(),
+        fetchDisciplines(),
+        fetchCurrentUser()
       ]);
-      console.log('Events Data:', eventsData); // Debug
+
       setResults(resultsData || []);
       setEvents(eventsData || []);
+      setDisciplines(disciplinesData || []);
+      setCurrentUser(userData);
       setLoading(false);
     } catch (err) {
       console.error('Error:', err);
       setError('Failed to load data. Please try again later.');
       setLoading(false);
+    }
+  };
+
+  const handleProfileUpdate = async (data) => {
+    try {
+      await updateUserProfile(data, userId);
+      showToast('Profil został zaktualizowany', 'success');
+      setShowProfileForm(false);
+      loadData();
+    } catch (err) {
+      throw new Error(err.message || 'Failed to update profile');
+    }
+  };
+
+  const handleResultCreate = async (data) => {
+    try {
+      const resultData = {
+        ...data,
+        athlete_id: userId
+      };
+      await createResult(resultData);
+      showToast('Wynik został dodany', 'success');
+      setShowResultForm(false);
+      loadData();
+    } catch (err) {
+      throw new Error(err.message || 'Failed to add result');
     }
   };
 
@@ -69,6 +108,12 @@ const AthletePanel = () => {
       },
     },
     { key: 'result', label: 'Wynik' },
+    { key: 'discipline_id', label: 'Dyscyplina',
+      render: (row) => {
+        const discipline = disciplines?.find((d) => d.id === row.discipline_id);
+        return discipline ? discipline.name : 'Unknown';
+      },
+    },
   ];
 
   if (loading) return <div className="flex items-center justify-center h-screen">Loading...</div>;
@@ -78,6 +123,11 @@ const AthletePanel = () => {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Panel Zawodnika</h2>
+        {currentUser && (
+          <h1 className="text-3xl font-semibold">
+            {currentUser.name} {currentUser.surname}
+          </h1>
+        )}
         <div className="flex gap-2">
           <Button onClick={() => setShowProfileForm(true)} variant="outline" className="flex items-center gap-2">
             <User className="h-4 w-4" />
@@ -91,31 +141,21 @@ const AthletePanel = () => {
       </div>
 
       <div className="grid gap-6">
-        <Card>
-          <CardHeader>
             <div className="flex justify-between items-center">
-              <Typography>Moje wyniki</Typography>
+            <h3 className="text-1xl font-bold">Moje wyniki</h3>
+
               <Button onClick={() => setShowResultForm(true)} className="flex items-center gap-2">
                 <PlusCircle className="h-4 w-4" />
                 Dodaj wynik
               </Button>
             </div>
-          </CardHeader>
-          <CardContent>
             <DataTable data={results} columns={resultColumns} title="Historia wyników" />
-          </CardContent>
-        </Card>
       </div>
 
       {showProfileForm && (
         <ProfileForm
-          user={null} // Fetch current user data
-          onSubmit={async (data) => {
-            // Handle profile update
-            showToast('Zapisano zmiany pomyślnie');
-            setShowProfileForm(false);
-            loadData();
-          }}
+          user={currentUser}
+          onSubmit={handleProfileUpdate}
           isAdmin={false}
         />
       )}
@@ -123,12 +163,8 @@ const AthletePanel = () => {
       {showResultForm && (
         <ResultForm
           events={events}
-          onSubmit={async (data) => {
-            // Handle result create
-            showToast('Dodano wynik pomyślnie');
-            setShowResultForm(false);
-            loadData();
-          }}
+          disciplines={disciplines}
+          onSubmit={handleResultCreate}
           isAdmin={false}
         />
       )}

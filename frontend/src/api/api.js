@@ -94,5 +94,70 @@ export const fetchUserResults = async (userId) => {
   });
   return handleResponse(response);
 };
-// 
+
+export const fetchCurrentUser = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
+
+  const response = await fetch(`${API_BASE_URL}/users/me`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    }
+  });
+  return handleResponse(response);
+};
+
+export const updateUserProfile = async (userData, userId) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
+
+  const response = await fetch(`${API_BASE_URL}/users/update/${userId}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData)
+  });
+  return handleResponse(response);
+};
+
+export const createResult = async (resultData) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
+
+  const response = await fetch(`${API_BASE_URL}/results/create`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(resultData)
+  });
+  return handleResponse(response);
+};
+
+export const fetchDisciplines = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
+
+  const response = await fetch(`${API_BASE_URL}/results/disciplines/`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    }
+  });
+  return handleResponse(response);
+};
 

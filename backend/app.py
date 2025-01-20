@@ -9,6 +9,7 @@ from models import db, User, Event, Result, Discipline
 from routes.users import users_bp
 from routes.events import events_bp
 from routes.results import results_bp
+from routes.disciplines import disciplines_bp
 
 # Inicjalizacja aplikacji Flask
 app = Flask(__name__)
@@ -32,6 +33,7 @@ migrate = Migrate(app, db)
 app.register_blueprint(users_bp, url_prefix='/api/users')
 app.register_blueprint(events_bp, url_prefix='/api/events')
 app.register_blueprint(results_bp, url_prefix='/api/results')
+app.register_blueprint(disciplines_bp, url_prefix='/api/disciplines')
 
 # Strona główna (opcja)
 @app.route('/')

@@ -24,6 +24,13 @@
 - **/api/results/update/\<id>** (POST): update a result's data
 - **/api/results/delete/\<id>** (DELETE): delete a result
 
+## Event
+
+- **/api/disciplines/** (GET): get all disciplines
+- **/api/disciplines/create** (POST): create a new discipline
+- **/api/disciplines/update/\<id>** (POST): update a discipline's data
+- **/api/discipline/delete/\<id>** (DELETE): delete a discipline
+
 ## Other
 
 - **/static/\<filename>** (GET)

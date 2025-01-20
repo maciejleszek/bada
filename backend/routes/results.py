@@ -120,7 +120,7 @@ def update_result(id, **kwargs):
 # Delete
 @results_bp.route("/delete/<id>", methods=["DELETE"])
 @token_required
-def delete_user(id, **kwargs):
+def delete_result(id, **kwargs):
     result = Result.query.filter_by(id=id).first()
     
     if not result:

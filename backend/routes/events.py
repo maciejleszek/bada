@@ -35,7 +35,7 @@ def create_event(**kwargs):
         db.session.commit()
     except:
         db.session.rollback()
-        return "Error: nie udało się dodać wydarzenia", 500
+        return "Error: Nie udało się dodać wydarzenia", 500
     
     return event.to_dict(), 201
 
@@ -47,7 +47,7 @@ def get_events(**kwargs):
         events = Event.query.all()
         return [event.to_dict() for event in events], 200
     except:
-        return "Error: błąd serwera", 500
+        return "Error: Błąd serwera", 500
 
 # Update
 @events_bp.route("/update/<id>", methods=["POST"])

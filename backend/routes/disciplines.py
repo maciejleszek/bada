@@ -27,7 +27,7 @@ def create_discipline(**kwargs):
         db.session.commit()
     except:
         db.session.rollback()
-        return "Error: nie udało się dodać dyscypliny", 500
+        return "Error: Nie udało się dodać dyscypliny", 500
     
     return discipline.to_dict(), 201
 
@@ -39,7 +39,7 @@ def get_disciplines(**kwargs):
         disciplines = Discipline.query.all()
         return [discipline.to_dict() for discipline in disciplines], 200
     except:
-        return "Error: błąd serwera", 500
+        return "Error: Błąd serwera", 500
 
 # Update
 @disciplines_bp.route("/update/<id>", methods=["POST"])

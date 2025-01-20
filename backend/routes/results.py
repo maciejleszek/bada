@@ -19,10 +19,10 @@ def create_result(**kwargs):
     athlete = User.query.filter_by(id=data["athlete_id"]).first()
 
     if not athlete:
-        return "Error: użytkownik o podanym id nie istnieje", 404
+        return "Error: Użytkownik o podanym id nie istnieje", 404
     
     if athlete.role != "zawodnik":
-        return "Error: użytkownik o podanym id nie jest zawodnikiem", 400
+        return "Error: Użytkownik o podanym id nie jest zawodnikiem", 400
     
     if "event_id" not in data:
         return "Error: Pole \"event_id\" jest wymagane", 400
@@ -30,7 +30,7 @@ def create_result(**kwargs):
     event = Event.query.filter_by(id=data["event_id"]).first()
 
     if not event:
-        return "Error: wydarzenie o podanym id nie istnieje", 404
+        return "Error: Wydarzenie o podanym id nie istnieje", 404
 
     if "discipline_id" not in data:
         return "Error: Pole \"discipline_id\" jest wymagane", 400
@@ -38,7 +38,7 @@ def create_result(**kwargs):
     discipline = Discipline.query.filter_by(id=data["discipline_id"]).first()
 
     if not discipline:
-        return "Error: dyscyplina o podanym id nie istnieje", 404
+        return "Error: Dyscyplina o podanym id nie istnieje", 404
 
     if "result" not in data:
         return "Error: Pole \"result\" jest wymagane", 400

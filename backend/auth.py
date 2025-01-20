@@ -19,9 +19,9 @@ def token_required(f):
         try:
             jwt_decoded = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
         except jwt.InvalidTokenError:
-            return "Error: niewłaściwy token", 401
+            return "Error: Niewłaściwy token", 401
         except jwt.ExpiredSignatureError:
-            return "Error: token wygasł", 401
+            return "Error: Token wygasł", 401
         
         # Share token data with inner function
         kwargs.update({"jwt_token_decoded": jwt_decoded})

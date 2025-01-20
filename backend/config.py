@@ -1,6 +1,6 @@
 import os
 
-# Konfiguracja aplikacji
+# App config
 class Config:
     DEBUG = False
     TESTING = False
@@ -19,7 +19,7 @@ class ProductionConfig(Config):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///sports_club.db')
 
-# Wybór konfiguracji
+# Chosen configs
 config = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,

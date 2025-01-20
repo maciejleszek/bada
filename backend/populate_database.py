@@ -32,7 +32,7 @@ def populate_database():
     db.session.add_all(users)
     db.session.flush()
 
-    # Discipline with different categories
+    # Disciplines with different categories
     disciplines = [
         Discipline(name="100 m sprint"),
         Discipline(name="Long jump"),
@@ -112,7 +112,7 @@ def populate_database():
             event_id=4, # Winter Indoor Meet
             discipline_id=5, # 400 m run
             result="54.3 s"
-        ),  # Winter Indoor Meet 400m
+        ),
     ]
     db.session.add_all(results_john + results_jane)
     db.session.flush()

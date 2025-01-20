@@ -5,13 +5,13 @@ from flask_cors import CORS
 from config import config
 from models import db, User, Event, Result, Discipline
 
-# Importowanie i rejestracja blueprintów
+# Import and regsiter blueprints
 from routes.users import users_bp
 from routes.events import events_bp
 from routes.results import results_bp
 from routes.disciplines import disciplines_bp
 
-# Inicjalizacja aplikacji Flask
+# Init Flask app
 app = Flask(__name__)
 app.config.from_object(config['development'])
 
@@ -26,7 +26,7 @@ CORS(app, resources={
     }
 })
 
-# Inicjalizacja bazy danych
+# Init database
 db.init_app(app)
 migrate = Migrate(app, db)
 
@@ -35,12 +35,12 @@ app.register_blueprint(events_bp, url_prefix='/api/events')
 app.register_blueprint(results_bp, url_prefix='/api/results')
 app.register_blueprint(disciplines_bp, url_prefix='/api/disciplines')
 
-# Strona główna (opcja)
+# Main page (optional)
 @app.route('/')
 def index():
     return {"message": "Witamy w backendzie aplikacji klubu lekkoatletycznego!"}, 200
 
-# Obsługa błędów (opcjonalne, dla lepszej obsługi użytkownika)
+# Error handling (optional)
 @app.errorhandler(404)
 def page_not_found(e):
     return {"error": "Nie znaleziono zasobu."}, 404
@@ -49,6 +49,6 @@ def page_not_found(e):
 def internal_server_error(e):
     return {"error": "Wystąpił błąd wewnętrzny serwera."}, 500
 
-# Punkt wejściowy aplikacji
+# App entry point
 if __name__ == '__main__':
     app.run(debug=True)

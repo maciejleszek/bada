@@ -23,7 +23,7 @@ def token_required(f):
         except jwt.ExpiredSignatureError:
             return "Error: token wygasł", 401
         
-        # Udostępnij dane w tokenie funkcji wewnętrznej
+        # Share token data with inner function
         kwargs.update({"jwt_token_decoded": jwt_decoded})
 
         return f(*args, **kwargs)

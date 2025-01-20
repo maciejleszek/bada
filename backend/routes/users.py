@@ -88,7 +88,7 @@ def create_user(**kwargs):
 
 # Read
 @users_bp.route("/", methods=["GET"])
-@token_required # Tylko dla adminów
+@token_required # Admin only
 def get_all_users(**kwargs):
     token_decoded = kwargs["jwt_token_decoded"]
 

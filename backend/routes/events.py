@@ -5,7 +5,7 @@ from auth import token_required
 events_bp = Blueprint('events', __name__)
 
 # Create
-@events_bp.route('/', methods=['POST'])
+@events_bp.route('/create', methods=['POST'])
 @token_required
 def create_event(**kwargs):
     jwt_token = kwargs["jwt_token_decoded"]

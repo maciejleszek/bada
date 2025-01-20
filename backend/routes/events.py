@@ -86,7 +86,7 @@ def update_event(id, **kwargs):
 # Delete
 @events_bp.route('/delete/<id>', methods=['DELETE'])
 @token_required
-def delete_user(id, **kwargs):
+def delete_event(id, **kwargs):
     event = Event.query.filter_by(id=id).first()
     
     if not event:

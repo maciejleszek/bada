@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchUsers, fetchEvents, fetchResults, fetchDisciplines, updateUserProfile, createUserProfile,
-  createResult, deleteUser, deleteResult } from '../api/api';
+  createResult, deleteUser, deleteResult, updateResult } from '../api/api';
 import DataTable from './DataTable';
 import ProfileForm from './ProfileForm';
 import ResultForm from './ResultForm';
@@ -79,14 +79,24 @@ const AdminPanel = () => {
     }
   };
 
-  const handleResultCreate = async (data) => {
+  const handleResultUpdate = async (data) => {
     try {
-      await createResult(data);
-      showToast('Wynik został dodany', 'success');
+      let resultId;
+      if (selectedItem?.id === undefined) {
+        // Nowy wynik
+        await createResult(data);
+        showToast('Wynik został dodany', 'success');
+        
+      } else {
+        // Istniejący wynik
+        resultId = selectedItem.id;
+        await updateResult(data, resultId);
+        showToast('Wynik został zaktualizowany', 'success');
+      }
       setShowResultForm(false);
       loadData();
     } catch (err) {
-      throw new Error(err.message || 'Failed to add result');
+      throw new Error(err.message || 'Failed to update profile');
     }
   };
 
@@ -300,7 +310,7 @@ const AdminPanel = () => {
           result={selectedItem}
           events={events}
           disciplines={disciplines}
-          onSubmit={handleResultCreate}
+          onSubmit={handleResultUpdate}
           isAdmin={true}
         />
       )}

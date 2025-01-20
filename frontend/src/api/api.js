@@ -163,6 +163,23 @@ export const createResult = async (resultData) => {
   return handleResponse(response);
 };
 
+export const updateResult = async (resultData, resultId) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
+
+  const response = await fetch(`${API_BASE_URL}/results/update/${resultId}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(resultData)
+  });
+  return handleResponse(response);
+};
+
 export const fetchDisciplines = async () => {
   const token = localStorage.getItem('token');
   if (!token) {

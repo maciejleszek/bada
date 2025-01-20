@@ -26,9 +26,13 @@
 #         |-- Login.jsx     # Komponent logowania
 #         |-- AthletePanel.jsx # Panel zawodnika
 #         |-- AdminPanel.jsx   # Panel administratora
-#         |-- ErrorPage.jsx   # Panel administratora
-#         |-- FormValidator.jsx   # Panel administratora
-#         |-- Toast.jsx   # Panel administratora
+#         |-- ErrorPage.jsx   # Komponent wyswietlania bledow
+#         |-- FormValidator.jsx   # Komponent walidacji formularza
+#         |-- Toast.jsx   # Komponent toast
+#         |-- ConfirmDialog.jsx   # Komponent potwierdzajacy
+#         |-- DataTable.jsx   # Komponent z tabelami danych
+#         |-- ProfileForm.jsx   # Komponent z formularzem uzytkownika
+#         |-- ResultForm.jsx   # Komponent z formularzem wyniku
 #     |-- api/
 #         |-- api.js       # Obsługa komunikacji z backendem
 #     |-- styles/

@@ -5,6 +5,7 @@ import { Alert, AlertTitle } from '@mui/material';
 
 const ResultForm = ({ result, events, disciplines, users, onSubmit, isAdmin }) => {
   const [formData, setFormData] = useState({
+    result_id: result?.id || null,
     athlete_id: result?.athlete_id || '',
     event_id: result?.event_id || '',
     discipline_id: result?.discipline_id || '',
